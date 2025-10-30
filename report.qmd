@@ -1,7 +1,6 @@
 ---
-title: "Electric Vehicle Registrations and Clean Energy Use Across U.S. States (2023)"
-author: "Ginger Rubin"
-format: pdf
+title: "EV Power - Lab 4 Project Report"
+format: typst
 ---
 
 # Example Solution 1
@@ -9,37 +8,16 @@ format: pdf
 ## **Part 0: libraries**
 
 ```{r}
-library(tibble)
-library(readr) 
-library(dplyr)
-install.packages("usmap")
-install.packages("scales")
-install.packages("usdata")
-library(stringr)
-library(ggplot2)
-library(usmap)
-library(scales)
-library(usdata)
 
 ```
 
 ## **Part 1:** **Defining Research Question**
 
-What state had the highest number of electric vehicle registrations?
+Chosen Question:
 
 ## **Part 2: Data Preparation and Cleaning**
 
 ```{r}
-
-ev_data <- read_csv("data/ev-registrations-by-state-2023.csv")
-ev_clean <- ev_data |>
-  rename_with(~ str_replace_all(tolower(.x), " ", "_")) |> 
-  mutate(
-    ev_registrations = str_replace_all(`...2`, "[^0-9]", ""),  # remove all non-digits
-    ev_registrations = as.numeric(ev_registrations)                 # convert to numeric
-  )|> select(-2)|> slice(-1:-2)|> rename("electric_vehicle_registrations_by_state_(2023)"= "State")
-
-
 
 ```
 
@@ -47,47 +25,10 @@ ev_clean <- ev_data |>
 
 ```{r}
 
-renew <- bind_rows(
-  read_csv("data/renew-use-2021.csv") |> mutate(year = 2021),
-  read_csv("data/renew-use-2022.csv") |> mutate(year = 2022),
-  read_csv("data/renew-use-2023.csv") |> mutate(year = 2023)
-) |> 
-  rename_with(~ str_replace_all(tolower(.x), " ", "_"))
-
-total <- bind_rows(
-  read_csv("data/total-use-2021.csv") |> mutate(year = 2021),
-  read_csv("data/total-use-2022.csv") |> mutate(year = 2022),
-  read_csv("data/total-use-2023.csv") |> mutate(year = 2023)
-) |> 
-  rename_with(~ str_replace_all(tolower(.x), " ", "_"))
-
 ```
 
 ## **Part 4: Mapping Visualization**
 
 ```{r}
-p <- plot_usmap(data = ev_clean, values = "ev_registrations", color = "white") +
-  scale_fill_continuous(trans = "log10",
-    name = "EV Registrations (2023)",
-    label = comma,
-    low = "lightblue",
-    high = "darkblue"
-  ) +
-  labs(
-    title = "Electric Vehicle Registrations by State (2023)",
-    caption = "Source: EV Registrations Dataset (STAT 133 Project 4)"
-  ) +
-  theme(legend.position = "right")
-
-p   # show the plot
 
 ```
-
-## Data and Methods
-
-The dataset used is `ev-registrations-by_state_2023.csv`, which lists the number of EVs registered in each U.S. state in 2023.\
-The data were cleaned by: - Standardizing column names, - Removing extra header rows, and - Converting all values to numeric form. Example of the cleaned dataset (`head(ev_clean)`):
-
-The following map shows the total number of electric vehicle registrations by state in 2023.\
-\## Analysis The map shows a strong concentration of EV registrations along the **West Coast**, especially in **California**, which leads the nation by a wide margin. Other states with relatively high counts include **Texas, Florida, and Washington**.\
-Most central and southeastern states have much lower adoption levels, reflecting regional differences in income, infrastructure, and policy incentives.
